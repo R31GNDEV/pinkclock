@@ -76,12 +76,24 @@ Pink Clock
 */
 %hook _UIStatusBarStringView
 -(void)setTextColor:(UIColor *)textColor {
- NSLog(@"%@",textColor);
- %orig([UIColor systemPinkColor]);
+ NSString *labelText = self.text;
+ if (labelText) {
+  if ([labelText containsString:@":"]) {
+   %orig([UIColor systemPinkColor]); //run original code with systemPinkColor
+   return; //return so we don't hit the other %orig
+  }
+ }
+ %orig;
 }
 -(void)setFont:(UIFont *)font {
- NSLog(@"%@",font);
- %orig([UIFont fontWithName:@"Baskerville-Italic" size:font.pointSize]);
+ NSString *labelText = self.text;
+ if (labelText) {
+  if ([labelText containsString:@":"]) {
+   %orig([UIFont fontWithName:@"Baskerville-Italic" size:font.pointSize]); //run original code with new font
+   return; //return so we don't hit the other %orig
+  }
+ }
+ %orig;
 }
 /*
 -(CALayer *)layer {
