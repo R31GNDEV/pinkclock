@@ -1,19 +1,6 @@
 #include <Foundation/Foundation.h>
 #include <UIKit/UIKit.h>
 #include <objc/runtime.h>
-/*
-Vars
-*/
-CAGradientLayer *gradientLayer;
-UIColor *colorOne;
-UIColor *colorTwo;
-UIColor *borderColor;
-/*
-Prefs
-*/
-static NSString *colorOneString;
-static NSString *colorTwoString;
-static NSString *borderColorString;
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_16_0
 #define kCFCoreFoundationVersionNumber_iOS_16_0 1946.10
@@ -45,9 +32,6 @@ Headers
 @property (assign,nonatomic) BOOL hidesImage;                               //@synthesize hidesImage=_hidesImage - In the implementation block
 @property (copy, nonatomic) UIColor *textColor;
 @property(class, nonatomic, readonly) UIColor *labelColor;
-@property(class, nonatomic, readonly) UIColor *secondaryLabelColor;
-@property(class, nonatomic, readonly) UIColor *tertiaryLabelColor;
-@property(class, nonatomic, readonly) UIColor *quaternaryLabelColor;
 @property (nonatomic) CGFloat pinColorAlpha; 
 @property (nonatomic) CGFloat bodyColorAlpha;
 @property(class, nonatomic, readonly) UIColor *placeholderTextColor;
@@ -95,16 +79,6 @@ Pink Clock
  }
  %orig;
 }
-/*
--(CALayer *)layer {
- CALayer *origLayer = %orig;
- origLayer.cornerRadius = 4.0;
- origLayer.borderWidth = 1.0;
- origLayer.shadowColor = [UIColor systemPinkColor].CGColor;
- origLayer.borderColor = [UIColor systemPinkColor].CGColor;
- return origLayer;
-}
-*/
 %end
 
 /*
