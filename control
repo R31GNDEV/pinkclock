@@ -6,4 +6,4 @@ Description: A Simple iOS tweak written in OBJ-C to change the color of your clo
 Maintainer: Kota
 Author: Kota & Snoolie
 Section: Tweaks
-Depends: mobilesubstrate (>= 0.9.5000)
+Depends: mobilesubstrate (>= 0.9.5000), ws.hbang.alderis (>= 1.1)

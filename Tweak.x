@@ -13,7 +13,7 @@ Headers
 
 */
 
-@interface _UILegibilityView : UIView {
+@interface _UIStatusBarStringView : UILabel {
 	BOOL _hidesImage;
 	UIImage* _image;
 	UIImage* _shadowImage;
@@ -22,45 +22,61 @@ Headers
 	UIImageView* _shadowImageView;
 	long long _options;
 }
-@property (nonatomic,retain) UIImage * image;                               //@synthesize image=_image - In the implementation block
-@property (nonatomic,retain) UIImage * shadowImage;                         //@synthesize shadowImage=_shadowImage - In the implementation block
-@property (nonatomic,retain) UIImageView * imageView;                       //@synthesize imageView=_imageView - In the implementation block
-@property (nonatomic,retain) UIImageView * shadowImageView;                 //@synthesize shadowImageView=_shadowImageView - In the implementation block
-@property (assign,nonatomic) long long options;                             //@synthesize options=_options - In the implementation block
-@property (nonatomic,readonly) long long style; 
-@property (assign,nonatomic) double strength;                               //@synthesize strength=_strength - In the implementation block
-@property (assign,nonatomic) BOOL hidesImage;                               //@synthesize hidesImage=_hidesImage - In the implementation block
-@property (copy, nonatomic) UIColor *textColor;
-@property(class, nonatomic, readonly) UIColor *labelColor;
-@property (nonatomic) CGFloat pinColorAlpha; 
-@property (nonatomic) CGFloat bodyColorAlpha;
-@property(class, nonatomic, readonly) UIColor *placeholderTextColor;
-- (id)_labelborderFillColor;
-- (id)_labelTextColor;
-@end
-@interface _UIStatusBarStringView : UILabel
 @property (nonatomic, retain) UIImage *image;
 @property (nonatomic, strong, readwrite) UIColor *textColor;
 @property (nonatomic, strong, readwrite) UIFont *font;
 @property(class, nonatomic, readonly) UIColor *placeholderTextColor;
+@property (copy, nonatomic) UIColor *pinColor;
+@property (nonatomic) CGFloat pinColorAlpha; 
+@property (nonatomic) CGFloat bodyColorAlpha;
+- (id)_labelborderFillColor;
+- (id)_labelTextColor;
 @end
-@interface NSUserDefaults (PinkClock)
-- (id)objectForKey:(NSString *)key inDomain:(NSString *)domain;
-- (void)setObject:(id)value forKey:(NSString *)key inDomain:(NSString *)domain;
-@end
-@interface CALayer (PinkClock)
-@property (nonatomic, retain) NSString *compositingFilter;
-@property (nonatomic, assign) BOOL allowsGroupOpacity;
-@property (nonatomic, assign) BOOL allowsGroupBlending;
-@end
+
+UIColor* colorFromHexString(NSString* hexString) {
+    NSString *daString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
+    if (![daString containsString:@"#"]) {
+        daString = [@"#" stringByAppendingString:daString];
+    }
+    unsigned rgbValue = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:daString];
+    [scanner setScanLocation:1]; // bypass '#' character
+    [scanner scanHexInt:&rgbValue];
+
+    NSRange range = [hexString rangeOfString:@":" options:NSBackwardsSearch];
+    NSString* alphaString;
+    if (range.location != NSNotFound) {
+        alphaString = [hexString substringFromIndex:(range.location + 1)];
+    } else {
+        alphaString = @"1.0"; //no opacity specified - just return 1 :/
+    }
+
+    return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:[alphaString floatValue]];
+}
+
 /*
 
 Pink Clock
 
 */
+
+NSUserDefaults *_preferences;
+BOOL _enabled;
+
+
 %hook _UIStatusBarStringView
+-(UIColor *)drawingColor {
+  UIColor *ret;
+  NSString *colorString = [_preferences objectForKey:@"colorOneString"];
+  NSLog(@"[*]Pink Clock: %@",colorString);
+  if (colorString) {
+    ret = colorFromHexString(colorString);
+  }
+  return ret ? ret : [UIColor cyanColor];
+}
+/*
 -(void)setTextColor:(UIColor *)textColor {
- NSString *labelText = self.text;
+ NSString *labelText = [_preferences objectForKey:@"colorOneString"];
  if (labelText) {
   if ([labelText containsString:@":"]) {
    %orig([UIColor systemPinkColor]); //run original code with systemPinkColor
@@ -69,11 +85,12 @@ Pink Clock
  }
  %orig;
 }
+*/
 -(void)setFont:(UIFont *)font {
  NSString *labelText = self.text;
  if (labelText) {
   if ([labelText containsString:@":"]) {
-   %orig([UIFont fontWithName:@"Baskerville-Italic" size:font.pointSize]); //run original code with new font
+   %orig([UIFont fontWithName:@"ChalkboardSE-Bold" size:font.pointSize]); //run original code with new font
    return; //return so we don't hit the other %orig
   }
  }
@@ -81,15 +98,16 @@ Pink Clock
 }
 %end
 
-/*
 %ctor {
-	_preferences = [[NSUserDefaults alloc] initWithSuiteName:@"online.transrights.colorstat"];
+	_preferences = [[NSUserDefaults alloc] initWithSuiteName:@"online.transrights.pinkclock"];
+	[_preferences registerDefaults:@{
+		@"enabled" : @YES,
+	}];
 	_enabled = [_preferences boolForKey:@"enabled"];
 	if(_enabled) {
 		NSLog(@"[Pink Clock] Enabled");
 		%init();
 	} else {
-		NSLog(@"[Pink Clock] Disabled, heading out!");
+		NSLog(@"[Pink Clock] Disabled, bye!");
 	}
 }
-*/
