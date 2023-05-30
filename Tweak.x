@@ -1,3 +1,7 @@
+/*
+Pink Clock : Created by Kota & Snoolie
+*/
+
 #include <Foundation/Foundation.h>
 #include <UIKit/UIKit.h>
 #include <objc/runtime.h>
@@ -25,6 +29,8 @@ Headers
 @property (nonatomic, retain) UIImage *image;
 @property (nonatomic, strong, readwrite) UIColor *textColor;
 @property (nonatomic, strong, readwrite) UIFont *font;
+@property (nonatomic, strong, readwrite) UIColor *shadowColor;
+@property (nonatomic, strong, readwrite) CGSize *shadowOffset;
 @property(class, nonatomic, readonly) UIColor *placeholderTextColor;
 @property (copy, nonatomic) UIColor *pinColor;
 @property (nonatomic) CGFloat pinColorAlpha; 
@@ -33,6 +39,9 @@ Headers
 - (id)_labelTextColor;
 @end
 
+/*
+RGB code Created by Snoolie :3, you can find it here: 
+*/
 UIColor* colorFromHexString(NSString* hexString) {
     NSString *daString = [hexString stringByReplacingOccurrencesOfString:@" " withString:@""];
     if (![daString containsString:@"#"]) {
@@ -54,29 +63,24 @@ UIColor* colorFromHexString(NSString* hexString) {
     return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:[alphaString floatValue]];
 }
 
-/*
-
-Pink Clock
-
-*/
-
 NSUserDefaults *_preferences;
 BOOL _enabled;
 
-
 %hook _UIStatusBarStringView
-/*
--(UIColor *)drawingColor {
-}
-*/
+
 -(CALayer *)layer {
   CALayer *origLayer = %orig;
   UIColor *kota;
   NSString *colorString = [_preferences objectForKey:@"colorOneString"];
-  NSLog(@"[*]Pink Clock: %@",colorString);
+  NSLog(@"[*]Pink Clock Text Color: %@",colorString);
   if (colorString) {
     kota = colorFromHexString(colorString);
-    self.textColor = [UIColor cyanColor];
+    self.textColor = kota;
+  }
+  NSString *shadowColorString = [_preferences objectForKey:@"colorOneString"];
+  NSLog(@"[*]Pink Clock Shadow: %@",shadowColorString);
+  if (shadowColorString) {
+    self.shadowColor = colorFromHexString(shadowColorString);
   }
   return origLayer;
 }
