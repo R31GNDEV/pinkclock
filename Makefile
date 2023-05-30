@@ -6,13 +6,15 @@ PREFIX = $(THEOS)/toolchain/linux/usr/bin/
 SYSROOT = $(THEOS)/sdks/iPhoneOS13.7.sdk
 INSTALL_TARGET_PROCESSES = SpringBoard
 THEOS_PACKAGE_SCHEME = rootless
-
+pinkclock_EXTRA_FRAMEWORKS += Alderis
 
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = pinkclock
 
-pinkclock_FILES = Tweak.x
+pinkclock_FILES = $(wildcard *.x)
 pinkclock_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
+SUBPROJECTS += pinkprefs
+include $(THEOS_MAKE_PATH)/aggregate.mk

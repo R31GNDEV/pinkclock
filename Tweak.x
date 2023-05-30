@@ -65,27 +65,22 @@ BOOL _enabled;
 
 
 %hook _UIStatusBarStringView
+/*
 -(UIColor *)drawingColor {
-  UIColor *ret;
+}
+*/
+-(CALayer *)layer {
+  CALayer *origLayer = %orig;
+  UIColor *kota;
   NSString *colorString = [_preferences objectForKey:@"colorOneString"];
   NSLog(@"[*]Pink Clock: %@",colorString);
   if (colorString) {
-    ret = colorFromHexString(colorString);
+    kota = colorFromHexString(colorString);
+    self.textColor = [UIColor cyanColor];
   }
-  return ret ? ret : [UIColor cyanColor];
+  return origLayer;
 }
-/*
--(void)setTextColor:(UIColor *)textColor {
- NSString *labelText = [_preferences objectForKey:@"colorOneString"];
- if (labelText) {
-  if ([labelText containsString:@":"]) {
-   %orig([UIColor systemPinkColor]); //run original code with systemPinkColor
-   return; //return so we don't hit the other %orig
-  }
- }
- %orig;
-}
-*/
+
 -(void)setFont:(UIFont *)font {
  NSString *labelText = self.text;
  if (labelText) {
