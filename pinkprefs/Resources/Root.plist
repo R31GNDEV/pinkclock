@@ -82,7 +82,7 @@
 			<key>default</key>
 			<string>#33b5e5</string>
 			<key>key</key>
-			<string>shadowColorString</string>
+			<string>shadowColor</string>
 			<key>label</key>
 			<string>Shadow Color Selector</string>
 			<key>showAlphaSlider</key>
@@ -90,6 +90,7 @@
 			<key>PostNotification</key>
 			<string>online.transrights.pinkclock/ReloadPrefs</string>
 		</dict>
+		
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>

@@ -27,14 +27,18 @@ Headers
 	long long _options;
 }
 @property (nonatomic, retain) UIImage *image;
+/*
 @property (nonatomic, strong, readwrite) UIColor *textColor;
 @property (nonatomic, strong, readwrite) UIFont *font;
 @property (nonatomic, strong, readwrite) UIColor *shadowColor;
 @property (nonatomic, strong, readwrite) CGSize *shadowOffset;
 @property(class, nonatomic, readonly) UIColor *placeholderTextColor;
+*/
 @property (copy, nonatomic) UIColor *pinColor;
 @property (nonatomic) CGFloat pinColorAlpha; 
 @property (nonatomic) CGFloat bodyColorAlpha;
+@property CGFloat shadowRadius;
+@property float shadowOpacity;
 - (id)_labelborderFillColor;
 - (id)_labelTextColor;
 @end
@@ -77,11 +81,13 @@ BOOL _enabled;
     kota = colorFromHexString(colorString);
     self.textColor = kota;
   }
-  NSString *shadowColorString = [_preferences objectForKey:@"colorOneString"];
-  NSLog(@"[*]Pink Clock Shadow: %@",shadowColorString);
-  if (shadowColorString) {
-    self.shadowColor = colorFromHexString(shadowColorString);
+  NSString *glowColorString = [_preferences objectForKey:@"shadowColor"];
+  NSLog(@"[*]Pink Clock Shadow: %@",glowColorString);
+  if (glowColorString) {
+    origLayer.shadowColor = colorFromHexString(glowColorString).CGColor;
   }
+  origLayer.shadowOpacity = 1;
+  origLayer.shadowOffset = CGSizeMake(0.0f,4.0f);
   return origLayer;
 }
 
