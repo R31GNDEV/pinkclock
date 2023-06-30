@@ -5,12 +5,12 @@ include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = pinkprefs
 
-pinkprefs_FILES = PINKRootListController.m
+pinkprefs_FILES = $(wildcard *.m)
 pinkprefs_FRAMEWORKS = UIKit
 pinkprefs_PRIVATE_FRAMEWORKS = Preferences
 pinkprefs_INSTALL_PATH = /Library/PreferenceBundles
 pinkprefs_CFLAGS = -fobjc-arc
 pinkprefs_LIBRARIES = colorpicker
-# pinkprefs_EXTRA_FRAMEWORKS = Cephei CepheiPrefs Alderis
+# pinkprefs_EXTRA_FRAMEWORKS = Alderis
 
 include $(THEOS_MAKE_PATH)/bundle.mk
