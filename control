@@ -1,6 +1,6 @@
 Package: online.transrights.pinkclock
 Name: Pink Clock
-Version: 1.0.3~meow
+Version: 1.0.4
 Architecture: iphoneos-arm
 Description: A Simple iOS tweak written in OBJ-C to change the color of your clock in the Status Bar!
 Maintainer: Kota

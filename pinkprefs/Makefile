@@ -4,7 +4,7 @@ THEOS_PACKAGE_SCHEME = rootless
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = pinkprefs
-
+FINALPACKAGE = 1
 pinkprefs_FILES = $(wildcard *.m)
 pinkprefs_FRAMEWORKS = UIKit
 pinkprefs_PRIVATE_FRAMEWORKS = Preferences
